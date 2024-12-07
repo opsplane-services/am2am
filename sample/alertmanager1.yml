@@ -1,0 +1,10 @@
+global:
+  resolve_timeout: 5m
+
+route:
+  receiver: "forward_to_am2am"
+
+receivers:
+  - name: "forward_to_am2am"
+    webhook_configs:
+    - url: "http://am2am:8080/api/v2/alerts"

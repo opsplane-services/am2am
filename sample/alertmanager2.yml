@@ -1,0 +1,8 @@
+global:
+  resolve_timeout: 5m
+
+route:
+  receiver: "log_alerts"
+
+receivers:
+  - name: "log_alerts"

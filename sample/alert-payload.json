@@ -1,0 +1,12 @@
+[
+    {
+      "status": "firing",
+      "labels": {
+        "alertname": "HighCPUUsage",
+        "severity": "critical"
+      },
+      "annotations": {
+        "summary": "CPU usage is too high"
+      }
+    }
+]

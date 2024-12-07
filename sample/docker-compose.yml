@@ -1,0 +1,26 @@
+version: '3.9'
+services:
+  am2am:
+    image: oleewere/am2am:latest
+    container_name: am2am
+    ports:
+      - "8080:8080"
+    environment:
+      RUST_LOG: "debug"
+      ALERTMANAGER_URL: "http://alertmanager2:9093/api/v2/alerts"
+  
+  alertmanager1:
+    image: prom/alertmanager:latest
+    container_name: alertmanager1
+    volumes:
+      - ./alertmanager1.yml:/etc/alertmanager/alertmanager.yml
+    ports:
+      - "9093:9093"
+
+  alertmanager2:
+    image: prom/alertmanager:latest
+    container_name: alertmanager2
+    volumes:
+      - ./alertmanager2.yml:/etc/alertmanager/alertmanager.yml
+    ports:
+      - "9094:9093"
