@@ -64,7 +64,7 @@ jobs:
         uses: docker/metadata-action@v4
         if: ${{ !steps.release.outputs.release_created }}
         with:
-          images:ghcr.io/${{ github.repository_owner }}/am2am
+          images: ghcr.io/${{ github.repository_owner }}/am2am
           tags: |
             type=ref,event=branch
             type=ref,event=pr
