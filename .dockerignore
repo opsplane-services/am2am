@@ -1,0 +1,5 @@
+sample
+.github
+.env*
+.gitignore
+Dockerfile
