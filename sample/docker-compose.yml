@@ -1,7 +1,7 @@
 version: '3.9'
 services:
   am2am:
-    image: oleewere/am2am:latest
+    image: ghcr.io/opsplane-services/am2am:latest
     container_name: am2am
     ports:
       - "8080:8080"
