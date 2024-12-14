@@ -1,10 +1,10 @@
+name: CI/CD Workflow
+
 on:
   push:
     branches:
       - 'master'
   pull_request:
-
-name: CI/CD Workflow
 
 permissions:
   contents: write
@@ -13,7 +13,7 @@ permissions:
 
 jobs:
   ci:
-    name: CI build
+    name: CI/CD build
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
