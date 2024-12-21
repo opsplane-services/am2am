@@ -18,30 +18,19 @@ jobs:
     strategy:
       matrix:
         platform:
-          - os-name: FreeBSD-x86_64
+          - os-name: x86_64-unknown-linux-musl
+            extension: ''
             runs-on: ubuntu-20.04
-            target: x86_64-unknown-freebsd
-            skip_tests: true
-
-          - os-name: Linux-x86_64
+          - os-name: x86_64-unknown-linux-gnu
+            extension: ''
             runs-on: ubuntu-20.04
-            target: x86_64-unknown-linux-musl
-
-          - os-name: Linux-aarch64
-            runs-on: ubuntu-20.04
-            target: aarch64-unknown-linux-musl
-
-          - os-name: Linux-riscv64
-            runs-on: ubuntu-20.04
-            target: riscv64gc-unknown-linux-gnu
-
-          - os-name: Windows-x86_64
-            runs-on: windows-latest
-            target: x86_64-pc-windows-msvc
-
-          - os-name: macOS-x86_64
+            features: native-tls
+          - os-name: x86_64-apple-darwin
+            extension: ''
             runs-on: macOS-latest
-            target: x86_64-apple-darwin
+          - os-name: x86_64-pc-windows-msvc
+            extension: .exe
+            runs-on: windows-latest
     steps:
       - uses: actions/checkout@v4
 
@@ -79,13 +68,21 @@ jobs:
           components: rustfmt, clippy
           override: true
 
-      - name: Build binary
-        uses: houseabsolute/actions-rust-cross@v0
-        with:
-          command: ${{ matrix.platform.command }}
-          target: ${{ matrix.platform.target }}
-          args: "--locked --release"
-          strip: true
+      - name: Maybe install SSL packages
+        run: sudo apt-get update --yes && sudo apt-get install --yes pkg-config openssl libssl-dev
+        if: matrix.platform.features == 'native-tls'
+
+      - name: Install Cross (for cross-compilation)
+        run: cargo install cross --locked
+
+      - name: Install Target
+        run: rustup target add ${{ matrix.platform.os-name }}
+
+      - name: Build Binary
+        run: |
+          cross build --release --target ${{ matrix.platform.os-name }}
+        env:
+          RUSTFLAGS: "-C target-feature=+crt-static"
 
       - name: Login to Nexus Registry
         uses: docker/login-action@v3
