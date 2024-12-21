@@ -36,6 +36,7 @@ jobs:
 
       - uses: google-github-actions/release-please-action@v4
         id: release
+        if: matrix.platform == 'x86_64-unknown-linux-gnu'
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           release-type: rust
