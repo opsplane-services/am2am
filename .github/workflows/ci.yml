@@ -18,14 +18,14 @@ jobs:
     strategy:
       matrix:
         platform:
-          #- os-name: x86_64-unknown-linux-musl
-          #  extension: ''
-          #  runs-on: ubuntu-20.04
-          #  features: native-tls
-          - os-name: x86_64-unknown-linux-gnu
+          - os-name: x86_64-unknown-linux-musl
             extension: ''
             runs-on: ubuntu-20.04
             features: native-tls
+          #- os-name: x86_64-unknown-linux-gnu
+          #  extension: ''
+          #  runs-on: ubuntu-20.04
+          #  features: native-tls
           #- os-name: x86_64-apple-darwin
           #  extension: ''
           #  runs-on: macOS-latest

@@ -1,5 +1,9 @@
 [build.env]
-passthrough = ["GITHUB_TOKEN"]
+passthrough = [
+    "GITHUB_TOKEN",
+    "OPENSSL_DIR",
+    "PKG_CONFIG_PATH"
+]
 
 # workaround for https://github.com/cross-rs/cross/issues/1345
 [target.x86_64-unknown-netbsd]
@@ -10,4 +14,9 @@ pre-build = [
     "cp /tmp/netbsd/usr/lib/libexecinfo.so /usr/local/x86_64-unknown-netbsd/lib",
     "rm base.tar.xz",
     "rm -rf /tmp/netbsd",
+]
+
+[target.x86_64-unknown-linux-musl]
+pre-build = [
+    "apt-get update --yes && apt-get install --yes musl-tools pkg-config openssl libssl-dev",
 ]
