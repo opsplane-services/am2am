@@ -1,19 +1,12 @@
-use axum::{
-    extract::Json,
-    http::StatusCode,
-    response::IntoResponse,
-    routing::post,
-    Router,
-};
+use axum::{extract::Json, http::StatusCode, response::IntoResponse, routing::post, Router};
+use base64::{engine::general_purpose::STANDARD, Engine};
 use dotenv::dotenv;
 use reqwest::Client;
 use serde_json::{json, Value};
 use std::{collections::HashMap, env, fs, sync::Arc};
 use tokio::sync::Semaphore;
 use tracing::{debug, error, info};
-use tracing_subscriber;
 use yaml_rust::YamlLoader;
-use base64::{engine::general_purpose::STANDARD, Engine};
 
 #[derive(Debug)]
 struct AlertManager {
@@ -26,9 +19,7 @@ async fn main() {
     dotenv().ok();
 
     let log_level = env::var("RUST_LOG").unwrap_or_else(|_| "info".to_string());
-    tracing_subscriber::fmt()
-        .with_env_filter(log_level)
-        .init();
+    tracing_subscriber::fmt().with_env_filter(log_level).init();
 
     let default_alertmanager_url = env::var("ALERTMANAGER_URL").unwrap_or_else(|_| {
         panic!("ALERTMANAGER_URL environment variable is required for the default alertmanager")
@@ -45,7 +36,8 @@ async fn main() {
 
     let mut alertmanagers = HashMap::new();
     if enable_label_routing {
-        let yaml_file_path = env::var("ALERTMANAGER_CONFIG").unwrap_or_else(|_| "alertmanagers.yaml".to_string());
+        let yaml_file_path =
+            env::var("ALERTMANAGER_CONFIG").unwrap_or_else(|_| "alertmanagers.yaml".to_string());
         match load_alertmanagers(&yaml_file_path) {
             Ok(configured_alertmanagers) => alertmanagers.extend(configured_alertmanagers),
             Err(err) => {
@@ -96,7 +88,9 @@ async fn main() {
 }
 
 fn build_client(username: Option<String>, password: Option<String>) -> Client {
-    let mut builder = Client::builder().pool_max_idle_per_host(100).timeout(std::time::Duration::from_secs(10));
+    let mut builder = Client::builder()
+        .pool_max_idle_per_host(100)
+        .timeout(std::time::Duration::from_secs(10));
 
     if let (Some(user), Some(pass)) = (username, password) {
         let auth = format!("{}:{}", user, pass);
@@ -131,8 +125,12 @@ fn load_alertmanagers(
             .ok_or("Missing 'url' field in config")?
             .to_string();
 
-        let username = value["auth"]["username"].as_str().map(|s| env::var(s).unwrap_or_default());
-        let password = value["auth"]["password"].as_str().map(|s| env::var(s).unwrap_or_default());
+        let username = value["auth"]["username"]
+            .as_str()
+            .map(|s| env::var(s).unwrap_or_default());
+        let password = value["auth"]["password"]
+            .as_str()
+            .map(|s| env::var(s).unwrap_or_default());
 
         let client = build_client(username, password);
         map.insert(key, AlertManager { url, client });
@@ -198,12 +196,11 @@ async fn proxy_alerts(
         }
         Ok(response) => {
             let status = response.status();
-            let body = response.text().await.unwrap_or_else(|_| "Unknown error".to_string());
-            error!(
-                "Failed to forward alerts: {} - {}",
-                status,
-                body
-            );
+            let body = response
+                .text()
+                .await
+                .unwrap_or_else(|_| "Unknown error".to_string());
+            error!("Failed to forward alerts: {} - {}", status, body);
             (
                 StatusCode::INTERNAL_SERVER_ERROR,
                 Json(json!({ "error": format!("Upstream returned {}: {}", status, body) })),
