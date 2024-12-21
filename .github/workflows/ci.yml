@@ -14,19 +14,23 @@ permissions:
 jobs:
   ci:
     name: CI/CD build
-    runs-on: ubuntu-latest
+    runs-on: ${{ matrix.platform.runs-on }}
     strategy:
       matrix:
         platform: [x86_64-unknown-linux-gnu, x86_64-apple-darwin, x86_64-pc-windows-msvc]
         include:
           - platform: x86_64-unknown-linux-musl
             extension: ''
+            runs-on: ubuntu-20.04
           - platform: x86_64-unknown-linux-gnu
             extension: ''
+            runs-on: ubuntu-20.04
           - platform: x86_64-apple-darwin
             extension: ''
+            runs-on: macOS-latest
           - platform: x86_64-pc-windows-msvc
             extension: .exe
+            runs-on: windows-latest
     steps:
       - uses: actions/checkout@v4
 
