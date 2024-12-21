@@ -15,7 +15,6 @@ jobs:
   ci:
     name: CI/CD build
     runs-on: ubuntu-latest
-    fail-fast: false
     strategy:
       matrix:
         platform: [x86_64-unknown-linux-gnu, x86_64-apple-darwin, x86_64-pc-windows-msvc]
