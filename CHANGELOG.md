@@ -1,5 +1,15 @@
 # Changelog
 
+## [0.1.2](https://github.com/opsplane-services/am2am/compare/v0.1.1...v0.1.2) (2024-12-21)
+
+
+### Bug Fixes
+
+* CI - multi platform build ([db279d5](https://github.com/opsplane-services/am2am/commit/db279d508209ea69fbbe364a850ba0c7e0a03c98))
+* install target ([e11fb27](https://github.com/opsplane-services/am2am/commit/e11fb2718eb3949d758e3e0b2e73085eeaf91859))
+* removed fail fast false ([6bf0d88](https://github.com/opsplane-services/am2am/commit/6bf0d88d0a06668ff431ddd8dcaa25d8419d4a04))
+* use release please only for one os ([3ed6cb3](https://github.com/opsplane-services/am2am/commit/3ed6cb369976b9add1bbd404c437f04644c4c2cb))
+
 ## [0.1.1](https://github.com/opsplane-services/am2am/compare/v0.1.0...v0.1.1) (2024-12-15)
 
 
