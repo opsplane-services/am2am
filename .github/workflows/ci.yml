@@ -68,8 +68,11 @@ jobs:
           toolchain: stable
           components: rustfmt, clippy
           override: true
+      - name: Install musl-tools
+        run: sudo apt-get update --yes && sudo apt-get install --yes musl-tools
+        if: contains(matrix.platform.os-name, 'musl')
 
-      - name: Maybe install SSL packages
+      - name: Install SSL packages
         run: sudo apt-get update --yes && sudo apt-get install --yes pkg-config openssl libssl-dev
         if: matrix.platform.features == 'native-tls'
 
@@ -79,9 +82,18 @@ jobs:
       - name: Install Target
         run: rustup target add ${{ matrix.platform.os-name }}
 
+      - name: Build Binary for musl
+        env:
+          OPENSSL_DIR: /usr/lib/x86_64-linux-gnu
+          PKG_CONFIG_PATH: /usr/lib/x86_64-linux-gnu/pkgconfig
+        if: contains(matrix.platform.os-name, 'musl')
+        run: |
+          cross build --release --target ${{ matrix.platform.os-name }}
+
       - name: Build Binary
         run: |
           cross build --release --target ${{ matrix.platform.os-name }}
+        if: ${{ matrix.platform.os-name == "x86_64-unknown-linux-musl" }}
         env:
           RUSTFLAGS: "-C target-feature=+crt-static"
 
