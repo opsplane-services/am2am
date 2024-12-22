@@ -53,16 +53,17 @@ jobs:
           #  os-type: linux
           #  extension: ''
           #  runs-on: ubuntu-20.04
-          - os-name: x86_64-unknown-linux-gnu
-            os-type: linux
-            extension: ''
-            runs-on: ubuntu-20.04
+          #- os-name: x86_64-unknown-linux-gnu
+          #  os-type: linux
+          #  extension: ''
+          #  runs-on: ubuntu-20.04
           #- os-name: x86_64-apple-darwin
           #  extension: ''
           #  runs-on: macOS-latest
-          #- os-name: x86_64-pc-windows-msvc
-          #  extension: .exe
-          #  runs-on: windows-latest
+          - os-name: x86_64-pc-windows-msvc
+            os-type: windows
+            extension: .exe
+            runs-on: windows-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -85,13 +86,25 @@ jobs:
           components: rustfmt, clippy
           override: true
 
-      - name: Install Cross (for cross-compilation)
+      - name: Install Cross (Linux)
+        if: matrix.platform.os-type == 'linux'
         run: |
           if ! command -v cross &>/dev/null; then
             cargo install cross --locked
           else
             echo "Cross is already installed, skipping installation."
           fi
+      
+      - name: Install cross (Windows)
+        if: matrix.platform.os-type == 'windows'
+        shell: powershell
+        run: |
+          if (-not (Get-Command cross -ErrorAction SilentlyContinue)) {
+            Write-Host "Cross not found. Installing..."
+            cargo install cross --locked
+          } else {
+            Write-Host "Cross is already installed."
+          }
 
       - name: Build Binary
         run: |
@@ -106,51 +119,20 @@ jobs:
           mkdir -p artifacts
           tar -czvf artifacts/am2am-${{ matrix.platform.os-name }}.tar.gz -C target/${{ matrix.platform.os-name }}/release am2am
 
+      - name: Create zip (Windows)
+        if: matrix.platform.os-type == 'windows'
+        run: |
+          mkdir -p artifacts
+          powershell Compress-Archive -Path target\x86_64-pc-windows-msvc\release\am2am.exe -DestinationPath artifacts\am2am-${{ matrix.platform.os-name }}.zip
+
       - name: Upload Release Artifact
         if: needs.release-please.outputs.created == 'true'
         uses: actions/upload-release-asset@v1
         with:
-          upload_url: ${{ needs.release-please.outputs.upload_url }}
-          asset_path: artifacts/am2am-${{ matrix.platform.os-name }}.tar.gz
-          asset_name: am2am-${{ matrix.platform.os-name }}.tar.gz
-          asset_content_type: application/gzip
-
-      - name: Login to Nexus Registry
-        uses: docker/login-action@v3
-        if: matrix.platform.os-name == 'x86_64-unknown-linux-gnu'
-        with:
-          registry: ghcr.io
-          username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Docker meta build
-        id: meta
-        uses: docker/metadata-action@v4
-        if: ${{ !needs.release-please.outputs.created && matrix.platform.os-name == 'x86_64-unknown-linux-gnu' }}
-        with:
-          images: ghcr.io/${{ github.repository_owner }}/am2am
-          tags: |
-            type=ref,event=branch
-            type=ref,event=pr
-            type=raw,value=latest
-
-      - name: Docker meta release
-        id: meta_release
-        uses: docker/metadata-action@v4
-        if: ${{ needs.release-please.outputs.created && matrix.platform.os-name == 'x86_64-unknown-linux-gnu' }}
-        with:
-          images: ghcr.io/${{ github.repository_owner }}/am2am
-          tags: |
-            type=ref,event=branch
-            type=raw,value=${{ steps.release.outputs.tag_name }}
-            type=raw,value=latest
-
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v3
-        if: matrix.platform.os-name == 'x86_64-unknown-linux-gnu'
-        with:
-          driver: docker-container
-          driver-opts: image=moby/buildkit:latest
+          upload_url: ${{ needs.release.outputs.upload_url }}
+          asset_path: ${{ matrix.platform.os-name != 'x86_64-pc-windows-msvc' && 'artifacts/am2am-${{ matrix.platform.os-name }}.tar.gz' || 'artifacts/am2am-${{ matrix.platform.os-name }}.zip' }}
+          asset_name: ${{ matrix.platform.os-name != 'x86_64-pc-windows-msvc' && 'am2am-${{ matrix.platform.os-name }}.tar.gz' || 'am2am-${{ matrix.platform.os-name }}.zip' }}
+          asset_content_type: ${{ matrix.platform.os-name != 'x86_64-pc-windows-msvc' && 'application/gzip' || 'application/zip' }}
 
   docker-publish:
     name: Docker Publish
