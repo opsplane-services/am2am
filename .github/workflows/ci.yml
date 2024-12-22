@@ -48,26 +48,34 @@ jobs:
     strategy:
       matrix:
         platform:
-          - os-name: x86_64-unknown-linux-musl
+          #- os-name: x86_64-unknown-linux-musl
+          #  os-type: linux
+          #  extension: ''
+          #  runs-on: ubuntu-20.04
+          #- os-name: x86_64-unknown-linux-gnu
+          #  os-type: linux
+          #  extension: ''
+          #  runs-on: ubuntu-20.04
+          - os-name: aarch64-unknown-linux-gnu
             os-type: linux
             extension: ''
             runs-on: ubuntu-20.04
-          - os-name: x86_64-unknown-linux-gnu
+          - os-name: aarch64-unknown-linux-musl
             os-type: linux
             extension: ''
             runs-on: ubuntu-20.04
-          - os-name: aarch64-apple-darwin
-            os-type: darwin
-            extension: ''
-            runs-on: macOS-latest
-          - os-name: x86_64-apple-darwin
-            os-type: darwin
-            extension: ''
-            runs-on: macOS-latest
-          - os-name: x86_64-pc-windows-msvc
-            os-type: windows
-            extension: .exe
-            runs-on: windows-latest
+          #- os-name: aarch64-apple-darwin
+          #  os-type: darwin
+          #  extension: ''
+          #  runs-on: macOS-latest
+          #- os-name: x86_64-apple-darwin
+          #  os-type: darwin
+          #  extension: ''
+          #  runs-on: macOS-latest
+          #- os-name: x86_64-pc-windows-msvc
+          #  os-type: windows
+          #  extension: .exe
+          #  runs-on: windows-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -140,7 +148,7 @@ jobs:
           cargo build --release --target ${{ matrix.platform.os-name }}
       
       - name: Create tar.gz
-        if: (matrix.platform.os-type == 'linux' || matrix.platform.os-type == 'darwin')
+        if: (matrix.platform.os-type == 'linux' || matrix.platform.os-type == 'darwin') && needs.release-please.outputs.created == 'true'
         run: |
           mkdir -p artifacts
           tar -czvf artifacts/am2am-${{ matrix.platform.os-name }}.tar.gz -C target/${{ matrix.platform.os-name }}/release am2am
@@ -151,7 +159,7 @@ jobs:
           fi
 
       - name: Create zip (Windows)
-        if: matrix.platform.os-type == 'windows'
+        if: matrix.platform.os-type == 'windows' && needs.release-please.outputs.created == 'true'
         run: |
           mkdir -p artifacts
           powershell Compress-Archive -Path target\x86_64-pc-windows-msvc\release\am2am.exe -DestinationPath artifacts\am2am-${{ matrix.platform.os-name }}.zip
