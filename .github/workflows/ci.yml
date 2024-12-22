@@ -77,7 +77,11 @@ jobs:
           cross build --release --target ${{ matrix.platform.os-name }}
         env:
           CARGO_TARGET_X86_64_UNKNOWN_LINUX_MUSL_RUSTFLAGS: "-C target-feature=+crt-static"
-          
+      
+      - name: Print target
+        run: |
+          ls -la target/
+          ls -la target/${{ matrix.platform.os-name }}
 
       - name: Login to Nexus Registry
         uses: docker/login-action@v3
