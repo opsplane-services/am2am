@@ -154,7 +154,7 @@ jobs:
 
   docker-publish:
     name: Docker Publish
-    runs-on: 
+    runs-on: ubuntu-20.04
     needs: release-please
     steps:
       - name: Login to Nexus Registry
