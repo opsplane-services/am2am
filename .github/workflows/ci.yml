@@ -30,7 +30,7 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-      - uses: google-github-actions/release-please-action@v4
+      - uses: googleapis/release-please-action@v4
         id: release
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
@@ -39,6 +39,7 @@ jobs:
     outputs:
       created: ${{ steps.release.outputs.release_created }}
       upload_url: ${{ steps.release.outputs.upload_url }}
+      tag_name: ${{ steps.release.outputs.tag_name }}
 
   ci:
     name: CI/CD build
@@ -132,15 +133,18 @@ jobs:
         run: |
           mkdir -p artifacts
           powershell Compress-Archive -Path target\x86_64-pc-windows-msvc\release\am2am.exe -DestinationPath artifacts\am2am-${{ matrix.platform.os-name }}.zip
-
-      - name: Upload Release Artifact
-        if: needs.release-please.outputs.created == 'true'
-        uses: actions/upload-release-asset@v1
-        with:
-          upload_url: ${{ needs.release-please.outputs.upload_url }}
-          asset_path: ${{ matrix.platform.os-type == 'windows' && format('artifacts/am2am-{0}.zip', matrix.platform.os-name) || format('artifacts/am2am-{0}.tar.gz', matrix.platform.os-name) }}
-          asset_name: ${{ matrix.platform.os-type == 'windows' && format('artifacts/am2am-{0}.zip', matrix.platform.os-name) || format('artifacts/am2am-{0}.tar.gz', matrix.platform.os-name) }}
-          asset_content_type: ${{ matrix.platform.os-type == 'windows' && 'application/zip' || 'application/gzip' }}
+      
+      - name: Upload Release Artifacts
+        if: needs.release-please.outputs.created == 'true' && matrix.platform.os-type != 'windows'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: gh release upload ${{ needs.release-please.outputs.tag_name }} ./artifacts/am2am-${{ matrix.platform.os-name }}.tar.gz
+      
+      - name: Upload Release Artifacts
+        if: needs.release-please.outputs.created == 'true' && matrix.platform.os-type == 'windows'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: gh release upload ${{ needs.release-please.outputs.tag_name }} ./artifacts/am2am-${{ matrix.platform.os-name }}.zip
 
   docker-publish:
     name: Docker Publish
@@ -176,7 +180,7 @@ jobs:
           images: ghcr.io/${{ github.repository_owner }}/am2am
           tags: |
             type=ref,event=branch
-            type=raw,value=${{ steps.release.outputs.tag_name }}
+            type=raw,value=${{ needs.release-please.outputs.tag_name }}
             type=raw,value=latest
 
       - name: Set up Docker Buildx
