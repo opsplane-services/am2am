@@ -1,8 +1,6 @@
 [build.env]
 passthrough = [
-    "GITHUB_TOKEN",
-    "OPENSSL_DIR",
-    "PKG_CONFIG_PATH"
+    "GITHUB_TOKEN"
 ]
 
 # workaround for https://github.com/cross-rs/cross/issues/1345
