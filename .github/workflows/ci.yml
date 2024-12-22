@@ -48,14 +48,14 @@ jobs:
     strategy:
       matrix:
         platform:
-          #- os-name: x86_64-unknown-linux-musl
-          #  os-type: linux
-          #  extension: ''
-          #  runs-on: ubuntu-20.04
-          #- os-name: x86_64-unknown-linux-gnu
-          #  os-type: linux
-          #  extension: ''
-          #  runs-on: ubuntu-20.04
+          - os-name: x86_64-unknown-linux-musl
+            os-type: linux
+            extension: ''
+            runs-on: ubuntu-20.04
+          - os-name: x86_64-unknown-linux-gnu
+            os-type: linux
+            extension: ''
+            runs-on: ubuntu-20.04
           - os-name: aarch64-apple-darwin
             os-type: darwin
             extension: ''
@@ -64,10 +64,10 @@ jobs:
             os-type: darwin
             extension: ''
             runs-on: macOS-latest
-          #- os-name: x86_64-pc-windows-msvc
-          #  os-type: windows
-          #  extension: .exe
-          #  runs-on: windows-latest
+          - os-name: x86_64-pc-windows-msvc
+            os-type: windows
+            extension: .exe
+            runs-on: windows-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -89,6 +89,21 @@ jobs:
           toolchain: stable
           components: rustfmt, clippy
           override: true
+
+      - name: Check formatting
+        run: cargo fmt --all -- --check
+  
+      - name: Run clippy
+        run: cargo clippy --all-targets -- -D warnings
+      
+      - name: Run tests
+        run: cargo test
+
+      - name: Install cargo-audit
+        run: cargo install cargo-audit
+
+      - name: Audit dependencies
+        run: cargo audit
 
       - name: Install Cross (Linux)
         if: matrix.platform.os-type == 'linux'
@@ -117,6 +132,7 @@ jobs:
         env:
           CARGO_TARGET_X86_64_UNKNOWN_LINUX_MUSL_RUSTFLAGS: "-C target-feature=+crt-static"
           CARGO_TARGET_X86_64_UNKNOWN_LINUX_GNU_RUSTFLAGS: "-C target-feature=+crt-static"
+      
       - name: Build Binary (MacOS)
         run: |
           rustup target add ${{ matrix.platform.os-name }}
@@ -146,10 +162,22 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: gh release upload ${{ needs.release-please.outputs.tag_name }} ./artifacts/am2am-${{ matrix.platform.os-name }}.zip
 
+      - name: Cargo Publish
+        if: needs.release-please.outputs.created == 'true' && matrix.platform.os-name == 'x86_64-unknown-linux-gnu'
+        env:
+          CARGO_REGISTRY_TOKEN: ${{ secrets.CARGO_REGISTRY_TOKEN }}
+        run: |
+          version=$(cargo metadata --format-version=1 --no-deps | jq -r '.packages[0].version')
+          if cargo search $(cargo metadata --format-version=1 --no-deps | jq -r '.packages[0].name') | grep $version; then
+            echo "Version $version already published."
+            exit 0
+          fi
+          cargo publish --no-verify
+
   docker-publish:
     name: Docker Publish
     runs-on: ubuntu-20.04
-    needs: release-please
+    needs: [release-please, ci]
     steps:
       - name: Checkout
         uses: actions/checkout@v4
