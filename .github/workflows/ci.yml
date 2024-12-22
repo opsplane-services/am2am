@@ -134,6 +134,7 @@ jobs:
           CARGO_TARGET_X86_64_UNKNOWN_LINUX_GNU_RUSTFLAGS: "-C target-feature=+crt-static"
       
       - name: Build Binary (MacOS)
+        if: matrix.platform.os-type == 'darwin' 
         run: |
           rustup target add ${{ matrix.platform.os-name }}
           cargo build --release --target ${{ matrix.platform.os-name }}
