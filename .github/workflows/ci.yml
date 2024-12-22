@@ -144,7 +144,11 @@ jobs:
         run: |
           mkdir -p artifacts
           tar -czvf artifacts/am2am-${{ matrix.platform.os-name }}.tar.gz -C target/${{ matrix.platform.os-name }}/release am2am
-          sha256sum artifacts/am2am-${{ matrix.platform.os-name }}.tar.gz > artifacts/am2am-${{ matrix.platform.os-name }}.tar.gz.sha256.txt
+          if [[ '${{ matrix.platform.os-type }}' == 'darwin' ]]; then
+            shasum -a 256 ./artifacts/am2am-${{ matrix.platform.os-name }}.tar.gz > ./artifacts/am2am-${{ matrix.platform.os-name }}.tar.gz.sha256.txt
+          else
+            sha256sum ./artifacts/am2am-${{ matrix.platform.os-name }}.tar.gz > ./artifacts/am2am-${{ matrix.platform.os-name }}.tar.gz.sha256.txt
+          fi
 
       - name: Create zip (Windows)
         if: matrix.platform.os-type == 'windows'
