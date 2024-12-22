@@ -20,7 +20,6 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
       - uses: webiny/action-conventional-commits@v1.1.0
-        if: matrix.platform.os-name == 'x86_64-unknown-linux-gnu'
         with:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
