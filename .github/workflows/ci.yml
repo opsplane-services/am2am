@@ -84,7 +84,9 @@ jobs:
 
       - name: Build Binary for musl
         env:
-          OPENSSL_DIR: /usr/lib/x86_64-linux-gnu
+          OPENSSL_DIR: /usr
+          OPENSSL_LIB_DIR: /usr/lib/x86_64-linux-gnu
+          OPENSSL_INCLUDE_DIR: /usr/include
           PKG_CONFIG_PATH: /usr/lib/x86_64-linux-gnu/pkgconfig
           #OPENSSL_DIR: "/usr"
           #OPENSSL_STATIC: "1"
