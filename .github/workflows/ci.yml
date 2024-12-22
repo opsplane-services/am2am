@@ -12,9 +12,38 @@ permissions:
   pull-requests: write
 
 jobs:
+  checkout:
+    name: "Checkout Code"
+    steps:
+      - uses: actions/checkout@v4
+  
+  check-commits:
+    name: "Check conventional commits"
+    needs: checkout
+    steps: 
+      - uses: webiny/action-conventional-commits@v1.1.0
+        if: matrix.platform.os-name == 'x86_64-unknown-linux-gnu'
+        with:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  release-please:
+    name: "Release Please"
+    needs: check-commits
+    steps:
+      - uses: google-github-actions/release-please-action@v4
+        id: release
+        if: matrix.platform.os-name == 'x86_64-unknown-linux-gnu'
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          release-type: rust
+          repo-url: opsplane-services/am2am
+    outputs:
+      created: ${{ steps.release.outputs.release_created }}
+
   ci:
     name: CI/CD build
     runs-on: ${{ matrix.platform.runs-on }}
+    needs: release-please
     strategy:
       matrix:
         platform:
@@ -33,21 +62,6 @@ jobs:
           #  extension: .exe
           #  runs-on: windows-latest
     steps:
-      - uses: actions/checkout@v4
-
-      - uses: webiny/action-conventional-commits@v1.1.0
-        if: matrix.platform.os-name == 'x86_64-unknown-linux-gnu'
-        with:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-      - uses: google-github-actions/release-please-action@v4
-        id: release
-        if: matrix.platform.os-name == 'x86_64-unknown-linux-gnu'
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-          release-type: rust
-          repo-url: opsplane-services/am2am
-
       - name: Checkout
         uses: actions/checkout@v4
       
@@ -85,16 +99,16 @@ jobs:
           CARGO_TARGET_X86_64_UNKNOWN_LINUX_GNU_RUSTFLAGS: "-C target-feature=+crt-static"
       
       - name: Create tar.gz
-        if: matrix.platform.os-type == 'linux' && steps.release.outputs.release_created == 'true'
+        if: matrix.platform.os-type == 'linux' && needs.release-please.outputs.created == 'true'
         run: |
           mkdir -p artifacts
           tar -czvf artifacts/am2am-${{ matrix.platform.os-name }}.tar.gz -C target/${{ matrix.platform.os-name }}/release am2am
 
       - name: Upload Release Artifact
-        if: steps.release.outputs.release_created == 'true'
+        if: needs.release-please.outputs.created == 'true'
         uses: actions/upload-release-asset@v1
         with:
-          upload_url: ${{ steps.release.outputs.upload_url }}
+          upload_url: ${{ needs.release-please.outputs.upload_url }}
           asset_path: artifacts/am2am-${{ matrix.platform.os-name }}.tar.gz
           asset_name: am2am-${{ matrix.platform.os-name }}.tar.gz
           asset_content_type: application/gzip
@@ -110,7 +124,7 @@ jobs:
       - name: Docker meta build
         id: meta
         uses: docker/metadata-action@v4
-        if: ${{ !steps.release.outputs.release_created && matrix.platform.os-name == 'x86_64-unknown-linux-gnu' }}
+        if: ${{ !needs.release-please.outputs.created && matrix.platform.os-name == 'x86_64-unknown-linux-gnu' }}
         with:
           images: ghcr.io/${{ github.repository_owner }}/am2am
           tags: |
@@ -121,7 +135,7 @@ jobs:
       - name: Docker meta release
         id: meta_release
         uses: docker/metadata-action@v4
-        if: ${{ steps.release.outputs.release_created && matrix.platform.os-name == 'x86_64-unknown-linux-gnu' }}
+        if: ${{ needs.release-please.outputs.created && matrix.platform.os-name == 'x86_64-unknown-linux-gnu' }}
         with:
           images: ghcr.io/${{ github.repository_owner }}/am2am
           tags: |
@@ -138,7 +152,7 @@ jobs:
 
       #- name: Build and push
       #  uses: docker/build-push-action@v3
-      #  if: ${{ !steps.release.outputs.release_created && matrix.platform.os-name == 'x86_64-unknown-linux-gnu' }}
+      #  if: ${{ !needs.release-please.outputs.created && matrix.platform.os-name == 'x86_64-unknown-linux-gnu' }}
       #  with:
       #    context: .
       #    file: ./Dockerfile
@@ -149,7 +163,7 @@ jobs:
 
       #- name: Build and push release
       #  uses: docker/build-push-action@v3
-      #  if: ${{ steps.release.outputs.release_created && matrix.platform.os-name == 'x86_64-unknown-linux-gnu' }}
+      #  if: ${{ needs.release-please.outputs.created && matrix.platform.os-name == 'x86_64-unknown-linux-gnu' }}
       #  with:
       #    context: .
       #    file: ./Dockerfile

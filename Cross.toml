@@ -28,8 +28,7 @@ passthrough = [
     "OPENSSL_LIB_DIR=/usr/lib/x86_64-linux-gnu",
     "OPENSSL_INCLUDE_DIR=/usr/include",
     "OPENSSL_STATIC=1",
-    "PKG_CONFIG_PATH=/usr/lib/x86_64-linux-gnu/pkgconfig",
-    "RUSTFLAGS"
+    "PKG_CONFIG_PATH=/usr/lib/x86_64-linux-gnu/pkgconfig"
 ]
 
 [target.x86_64-unknown-linux-gnu]
@@ -46,6 +45,5 @@ passthrough = [
     "OPENSSL_LIB_DIR=/usr/lib/x86_64-linux-gnu",
     "OPENSSL_INCLUDE_DIR=/usr/include",
     "OPENSSL_STATIC=1",
-    "PKG_CONFIG_PATH=/usr/lib/x86_64-linux-gnu/pkgconfig",
-    "RUSTFLAGS"
+    "PKG_CONFIG_PATH=/usr/lib/x86_64-linux-gnu/pkgconfig"
 ]
