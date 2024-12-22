@@ -23,5 +23,6 @@ pre-build = [
 pre-build = [
     "apt-get update",
     "dpkg --configure -a || true",
-    "DEBIAN_FRONTEND=noninteractive apt-get install --yes --no-install-recommends musl musl-tools musl-dev pkg-config libssl-dev -o Dpkg::Options::=--force-confdef -o Dpkg::Options::=--force-confold"
+    "DEBIAN_FRONTEND=noninteractive apt-get install --yes --no-install-recommends musl musl-tools musl-dev pkg-config libssl-dev -o Dpkg::Options::=--force-confdef -o Dpkg::Options::=--force-confold",
+    "dpkg -L libssl-dev"
 ]
