@@ -133,14 +133,14 @@ jobs:
           mkdir -p artifacts
           powershell Compress-Archive -Path target\x86_64-pc-windows-msvc\release\am2am.exe -DestinationPath artifacts\am2am-${{ matrix.platform.os-name }}.zip
 
-      - name: Upload Release Artifact
-        if: needs.release-please.outputs.created == 'true'
-        uses: actions/upload-release-asset@v1
-        with:
-          upload_url: ${{ needs.release-please.outputs.upload_url }}
-          asset_path: ${{ matrix.platform.os-type != 'windows' && 'artifacts/am2am-${{ matrix.platform.os-name }}.tar.gz' || 'artifacts/am2am-${{ matrix.platform.os-name }}.zip' }}
-          asset_name: ${{ matrix.platform.os-type != 'windows' && 'am2am-${{ matrix.platform.os-name }}.tar.gz' || 'am2am-${{ matrix.platform.os-name }}.zip' }}
-          asset_content_type: ${{ matrix.platform.os-type != 'windows' && 'application/gzip' || 'application/zip' }}
+- name: Upload Release Artifact
+  if: needs.release-please.outputs.created == 'true'
+  uses: actions/upload-release-asset@v1
+  with:
+    upload_url: ${{ needs.release-please.outputs.upload_url }}
+    asset_path: ${{ matrix.platform.os-type == 'windows' && 'artifacts/am2am-' + matrix.platform.os-name + '.zip' || 'artifacts/am2am-' + matrix.platform.os-name + '.tar.gz' }}
+    asset_name: ${{ matrix.platform.os-type == 'windows' && 'am2am-' + matrix.platform.os-name + '.zip' || 'am2am-' + matrix.platform.os-name + '.tar.gz' }}
+    asset_content_type: ${{ matrix.platform.os-type == 'windows' && 'application/zip' || 'application/gzip' }}
 
   docker-publish:
     name: Docker Publish
@@ -196,12 +196,12 @@ jobs:
       #    labels: ${{ steps.meta.outputs.labels }}
       #    push: ${{ github.event_name != 'pull_request' }}
 
-      - name: Build and push release
-        uses: docker/build-push-action@v3
-        if: ${{ needs.release-please.outputs.created }}
-        with:
-          context: .
-          file: ./Dockerfile
-          tags: ${{ steps.meta_release.outputs.tags }}
-          labels: ${{ steps.meta_release.outputs.labels }}
-          push: ${{ github.event_name != 'pull_request' }}
+      #- name: Build and push release
+      #  uses: docker/build-push-action@v3
+      #  if: ${{ needs.release-please.outputs.created }}
+      #  with:
+      #    context: .
+      #    file: ./Dockerfile
+      #    tags: ${{ steps.meta_release.outputs.tags }}
+      #    labels: ${{ steps.meta_release.outputs.labels }}
+      #    push: ${{ github.event_name != 'pull_request' }}
