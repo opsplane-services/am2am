@@ -70,7 +70,12 @@ jobs:
           override: true
 
       - name: Install Cross (for cross-compilation)
-        run: cargo install cross --locked
+        run: |
+          if ! command -v cross &>/dev/null; then
+            cargo install cross --locked
+          else
+            echo "Cross is already installed, skipping installation."
+          fi
 
       - name: Build Binary
         run: |
