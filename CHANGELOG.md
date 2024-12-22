@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.1.3](https://github.com/opsplane-services/am2am/compare/v0.1.2...v0.1.3) (2024-12-22)
+
+
+### Bug Fixes
+
+* add missing release-please output ([700bee9](https://github.com/opsplane-services/am2am/commit/700bee9ae72e700c95154e7b7710888ea9e112b0))
+
 ## [0.1.2](https://github.com/opsplane-services/am2am/compare/v0.1.1...v0.1.2) (2024-12-22)
 
 
