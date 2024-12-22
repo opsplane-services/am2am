@@ -140,14 +140,14 @@ jobs:
           cargo build --release --target ${{ matrix.platform.os-name }}
       
       - name: Create tar.gz
-        if: (matrix.platform.os-type == 'linux' || matrix.platform.os-type == 'darwin') && needs.release-please.outputs.created == 'true'
+        if: (matrix.platform.os-type == 'linux' || matrix.platform.os-type == 'darwin')
         run: |
           mkdir -p artifacts
           tar -czvf artifacts/am2am-${{ matrix.platform.os-name }}.tar.gz -C target/${{ matrix.platform.os-name }}/release am2am
           sha256sum artifacts/am2am-${{ matrix.platform.os-name }}.tar.gz > artifacts/am2am-${{ matrix.platform.os-name }}.tar.gz.sha256.txt
 
       - name: Create zip (Windows)
-        if: matrix.platform.os-type == 'windows' && needs.release-please.outputs.created == 'true'
+        if: matrix.platform.os-type == 'windows'
         run: |
           mkdir -p artifacts
           powershell Compress-Archive -Path target\x86_64-pc-windows-msvc\release\am2am.exe -DestinationPath artifacts\am2am-${{ matrix.platform.os-name }}.zip
