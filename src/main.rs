@@ -76,13 +76,13 @@ async fn main() {
             }
         }),
     );
+    let server_address = env::var("SERVER_ADDRESS").unwrap_or_else(|_| "0.0.0.0:8080".to_string());
+    let listener = tokio::net::TcpListener::bind(&server_address)
+        .await
+        .unwrap();
+    info!("Starting server on {}", &server_address);
 
-    let addr = ([0, 0, 0, 0], 8080).into();
-    info!("Starting server on {}", addr);
-
-    axum::Server::bind(&addr)
-        .http1_keepalive(true)
-        .serve(app.into_make_service())
+    axum::serve(listener, app.into_make_service())
         .await
         .unwrap();
 }

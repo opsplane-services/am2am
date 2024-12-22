@@ -36,6 +36,7 @@ The application can be configured using environment variables and a YAML configu
 - `LABEL_ROUTING_KEY`: Label key used for routing alerts to specific Alertmanager instances. Default value: `alertmanager`
 - `ENABLE_LABEL_ROUTING`: Enable or disable label-based routing. Set to true to enable, otherwise only use the default Alertmanager. Default value: `true`
 - `RUST_LOG`: Log level for the application. Supported values: info, debug, warn, error. Default value: info
+- `SERVER_ADDRESS`: Use custom server address. Default value: `0.0.0.0:8000`
 
 ### YAML Configuration
 The `ALERTMANAGER_CONFIG` YAML file defines additional Alertmanager instances and their authentication details.
@@ -96,6 +97,7 @@ export DEFAULT_PASSWORD=default_pass
 export ALERTMANAGER_CONFIG=alertmanagers.yaml
 export LABEL_ROUTING_KEY=custom_label
 export ENABLE_LABEL_ROUTING=true
+export SERVER_ADDRESS=0.0.0.0;8080
 ```
 
 Starting the Application:
