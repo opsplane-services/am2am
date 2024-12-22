@@ -18,8 +18,8 @@ pre-build = [
 pre-build = [
     "apt-get update",
     "dpkg --configure -a || true",
-    "DEBIAN_FRONTEND=noninteractive apt-get install --yes --no-install-recommends musl-tools pkg-config libssl-dev -o Dpkg::Options::=--force-confdef -o Dpkg::Options::=--force-confold",
-    "cargo add openssl --features vendored"
+    "dpkg --add-architecture $CROSS_DEB_ARCH",
+    "DEBIAN_FRONTEND=noninteractive apt-get install --yes --no-install-recommends musl-tools pkg-config libssl-dev:$CROSS_DEB_ARCH -o Dpkg::Options::=--force-confdef -o Dpkg::Options::=--force-confold"
 ]
 
 [target.x86_64-unknown-linux-musl.env]
