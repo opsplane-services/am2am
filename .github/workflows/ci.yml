@@ -14,12 +14,14 @@ permissions:
 jobs:
   checkout:
     name: "Checkout Code"
+    runs-on: ubuntu-20.04
     steps:
       - uses: actions/checkout@v4
   
   check-commits:
     name: "Check conventional commits"
     needs: checkout
+    runs-on: ubuntu-20.04
     steps: 
       - uses: webiny/action-conventional-commits@v1.1.0
         if: matrix.platform.os-name == 'x86_64-unknown-linux-gnu'
@@ -29,6 +31,7 @@ jobs:
   release-please:
     name: "Release Please"
     needs: check-commits
+    runs-on: ubuntu-20.04
     steps:
       - uses: google-github-actions/release-please-action@v4
         id: release
