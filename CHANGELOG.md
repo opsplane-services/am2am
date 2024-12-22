@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.1.7](https://github.com/opsplane-services/am2am/compare/v0.1.6...v0.1.7) (2024-12-22)
+
+
+### Bug Fixes
+
+* add cargo tools for build ([cd0d353](https://github.com/opsplane-services/am2am/commit/cd0d35381a4c4496e1936a1da49560473f5a6b83))
+* use darwin condition for build binary ([d05efe3](https://github.com/opsplane-services/am2am/commit/d05efe3612fb7d56f902d54e971f456a8cc3b817))
+
 ## [0.1.6](https://github.com/opsplane-services/am2am/compare/v0.1.5...v0.1.6) (2024-12-22)
 
 
