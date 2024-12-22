@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.1.6](https://github.com/opsplane-services/am2am/compare/v0.1.5...v0.1.6) (2024-12-22)
+
+
+### Bug Fixes
+
+* use different name for windows ([3b4df27](https://github.com/opsplane-services/am2am/commit/3b4df275f06f6d4334c9ca90c80498f3a8983739))
+* use gh for uploading artifacts ([32c616c](https://github.com/opsplane-services/am2am/commit/32c616c2115422659d11218a7798b25c37fabc7d))
+
 ## [0.1.5](https://github.com/opsplane-services/am2am/compare/v0.1.4...v0.1.5) (2024-12-22)
 
 
