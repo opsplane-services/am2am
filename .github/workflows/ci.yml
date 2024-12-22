@@ -57,13 +57,14 @@ jobs:
           #  os-type: linux
           #  extension: ''
           #  runs-on: ubuntu-20.04
-          #- os-name: x86_64-apple-darwin
-          #  extension: ''
-          #  runs-on: macOS-latest
-          - os-name: x86_64-pc-windows-msvc
-            os-type: windows
-            extension: .exe
-            runs-on: windows-latest
+          - os-name: x86_64-apple-darwin
+            os-type: linux
+            extension: ''
+            runs-on: macOS-latest
+          #- os-name: x86_64-pc-windows-msvc
+          #  os-type: windows
+          #  extension: .exe
+          #  runs-on: windows-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v4
