@@ -31,3 +31,21 @@ passthrough = [
     "PKG_CONFIG_PATH=/usr/lib/x86_64-linux-gnu/pkgconfig",
     "RUSTFLAGS"
 ]
+
+[target.x86_64-unknown-linux-gnu]
+pre-build = [
+    "apt-get update",
+    "dpkg --configure -a || true",
+    "dpkg --add-architecture amd64",
+    "DEBIAN_FRONTEND=noninteractive apt-get install --yes --no-install-recommends pkg-config libssl-dev:amd64 -o Dpkg::Options::=--force-confdef -o Dpkg::Options::=--force-confold"
+]
+
+[target.x86_64-unknown-linux-gnu.env]
+passthrough = [
+    "OPENSSL_DIR=/usr",
+    "OPENSSL_LIB_DIR=/usr/lib/x86_64-linux-gnu",
+    "OPENSSL_INCLUDE_DIR=/usr/include",
+    "OPENSSL_STATIC=1",
+    "PKG_CONFIG_PATH=/usr/lib/x86_64-linux-gnu/pkgconfig",
+    "RUSTFLAGS"
+]
