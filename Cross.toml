@@ -52,8 +52,8 @@ passthrough = [
 pre-build = [
     "apt-get update",
     "dpkg --configure -a || true",
-    "dpkg --add-architecture aarch64",
-    "DEBIAN_FRONTEND=noninteractive apt-get install --yes --no-install-recommends pkg-config libssl-dev:aarch64 -o Dpkg::Options::=--force-confdef -o Dpkg::Options::=--force-confold"
+    "dpkg --add-architecture arm64",
+    "DEBIAN_FRONTEND=noninteractive apt-get install --yes --no-install-recommends pkg-config libssl-dev:arm64 -o Dpkg::Options::=--force-confdef -o Dpkg::Options::=--force-confold"
 ]
 
 [target.aarch64-unknown-linux-gnu.env]
@@ -69,8 +69,8 @@ passthrough = [
 pre-build = [
     "apt-get update",
     "dpkg --configure -a || true",
-    "dpkg --add-architecture aarch64",
-    "DEBIAN_FRONTEND=noninteractive apt-get install --yes --no-install-recommends musl-tools pkg-config libssl-dev:aarch64 -o Dpkg::Options::=--force-confdef -o Dpkg::Options::=--force-confold"
+    "dpkg --add-architecture arm64",
+    "DEBIAN_FRONTEND=noninteractive apt-get install --yes --no-install-recommends musl-tools pkg-config libssl-dev:arm64 -o Dpkg::Options::=--force-confdef -o Dpkg::Options::=--force-confold"
 ]
 
 [target.aarch64-unknown-linux-musl.env]
