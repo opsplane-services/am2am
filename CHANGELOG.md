@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.1.4](https://github.com/opsplane-services/am2am/compare/v0.1.3...v0.1.4) (2024-12-22)
+
+
+### Bug Fixes
+
+* releas-please referenced wrongly ([3eee0c6](https://github.com/opsplane-services/am2am/commit/3eee0c600a69ffc5b2d79835d6b83f1a4fff8365))
+
 ## [0.1.3](https://github.com/opsplane-services/am2am/compare/v0.1.2...v0.1.3) (2024-12-22)
 
 
