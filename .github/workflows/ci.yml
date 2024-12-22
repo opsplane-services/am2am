@@ -69,15 +69,8 @@ jobs:
           components: rustfmt, clippy
           override: true
 
-      - name: Install SSL packages
-        run: sudo apt-get update --yes && sudo apt-get install --yes pkg-config openssl libssl-dev
-        if: matrix.platform.features == 'native-tls'
-
       - name: Install Cross (for cross-compilation)
         run: cargo install cross --locked
-
-      - name: Install Target
-        run: rustup target add ${{ matrix.platform.os-name }}
 
       - name: Build Binary
         run: |
