@@ -19,13 +19,12 @@ jobs:
       matrix:
         platform:
           - os-name: x86_64-unknown-linux-musl
+            os-type: linux
             extension: ''
             runs-on: ubuntu-20.04
-            features: native-tls
           #- os-name: x86_64-unknown-linux-gnu
           #  extension: ''
           #  runs-on: ubuntu-20.04
-          #  features: native-tls
           #- os-name: x86_64-apple-darwin
           #  extension: ''
           #  runs-on: macOS-latest
@@ -58,9 +57,9 @@ jobs:
             ~/.cargo/registry
             ~/.cargo/bin
             target
-          key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
+          key: ${{ matrix.platform.os-name }}-cargo-${{ hashFiles('**/Cargo.lock') }}
           restore-keys: |
-            ${{ runner.os }}-cargo-
+            ${{ matrix.platform.os-name }}-cargo-
 
       - name: Set up Rust
         uses: actions-rs/toolchain@v1
@@ -83,10 +82,12 @@ jobs:
         env:
           CARGO_TARGET_X86_64_UNKNOWN_LINUX_MUSL_RUSTFLAGS: "-C target-feature=+crt-static"
       
-      - name: Print target
+      - name: Create tar.gz
+        #if: steps.release.outputs.release_created == 'true'
+        if: os.type == 'linux'
         run: |
-          ls -la target/${{ matrix.platform.os-name }}
-          ls -la target/${{ matrix.platform.os-name }}/release
+          mkdir -p artifacts
+          tar -czvf artifacts/am2am-${{ matrix.platform.os-name }}.tar.gz -C target/${{ matrix.platform.os-name }}/release am2am
 
       - name: Login to Nexus Registry
         uses: docker/login-action@v3
