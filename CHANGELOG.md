@@ -1,5 +1,14 @@
 # Changelog
 
+## [0.1.5](https://github.com/opsplane-services/am2am/compare/v0.1.4...v0.1.5) (2024-12-22)
+
+
+### Bug Fixes
+
+* indent ([2c8f9e7](https://github.com/opsplane-services/am2am/commit/2c8f9e77d0a3400603672027fa5ae63cdf478c66))
+* update release artifacts ([1bebf90](https://github.com/opsplane-services/am2am/commit/1bebf909708051c19b1f57ea5bcdb121606e8caf))
+* use proper artifact name in the expression ([f031479](https://github.com/opsplane-services/am2am/commit/f03147904c40b2c51cd62db7046a3f5b65af4469))
+
 ## [0.1.4](https://github.com/opsplane-services/am2am/compare/v0.1.3...v0.1.4) (2024-12-22)
 
 
