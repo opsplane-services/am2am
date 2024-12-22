@@ -138,8 +138,8 @@ jobs:
         uses: actions/upload-release-asset@v1
         with:
           upload_url: ${{ needs.release-please.outputs.upload_url }}
-          asset_path: ${{ matrix.platform.os-type == 'windows' && 'artifacts/am2am-' + matrix.platform.os-name + '.zip' || 'artifacts/am2am-' + matrix.platform.os-name + '.tar.gz' }}
-          asset_name: ${{ matrix.platform.os-type == 'windows' && 'am2am-' + matrix.platform.os-name + '.zip' || 'am2am-' + matrix.platform.os-name + '.tar.gz' }}
+          asset_path: ${{ matrix.platform.os-type == 'windows' && format('artifacts/am2am-{0}.zip', matrix.platform.os-name) || format('artifacts/am2am-{0}.tar.gz', matrix.platform.os-name) }}
+          asset_name: ${{ matrix.platform.os-type == 'windows' && format('artifacts/am2am-{0}.zip', matrix.platform.os-name) || format('artifacts/am2am-{0}.tar.gz', matrix.platform.os-name) }}
           asset_content_type: ${{ matrix.platform.os-type == 'windows' && 'application/zip' || 'application/gzip' }}
 
   docker-publish:
