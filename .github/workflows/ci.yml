@@ -124,7 +124,7 @@ jobs:
           cargo build --release --target ${{ matrix.platform.os-name }}
       
       - name: Create tar.gz
-        if: (matrix.platform.os-type == 'linux' || matrix.platform.os-type == 'darwin')
+        if: (matrix.platform.os-type == 'linux' || matrix.platform.os-type == 'darwin') && needs.release-please.outputs.created == 'true'
         run: |
           mkdir -p artifacts
           tar -czvf artifacts/am2am-${{ matrix.platform.os-name }}.tar.gz -C target/${{ matrix.platform.os-name }}/release am2am
@@ -183,6 +183,7 @@ jobs:
         with:
           driver: docker-container
           driver-opts: image=moby/buildkit:latest
+      
       #- name: Build and push
       #  uses: docker/build-push-action@v3
       #  if: ${{ !needs.release-please.outputs.created }}
@@ -194,12 +195,12 @@ jobs:
       #    labels: ${{ steps.meta.outputs.labels }}
       #    push: ${{ github.event_name != 'pull_request' }}
 
-      #- name: Build and push release
-      #  uses: docker/build-push-action@v3
-      #  if: ${{ needs.release-please.outputs.created }}
-      #  with:
-      #    context: .
-      #    file: ./Dockerfile
-      #    tags: ${{ steps.meta_release.outputs.tags }}
-      #    labels: ${{ steps.meta_release.outputs.labels }}
-      #    push: ${{ github.event_name != 'pull_request' }}
+      - name: Build and push release
+        uses: docker/build-push-action@v3
+        if: ${{ needs.release-please.outputs.created }}
+        with:
+          context: .
+          file: ./Dockerfile
+          tags: ${{ steps.meta_release.outputs.tags }}
+          labels: ${{ steps.meta_release.outputs.labels }}
+          push: ${{ github.event_name != 'pull_request' }}
