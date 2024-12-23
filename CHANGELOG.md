@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.1.10](https://github.com/opsplane-services/am2am/compare/v0.1.9...v0.1.10) (2024-12-23)
+
+
+### Bug Fixes
+
+* install cargo audit fix for windows ([0cd6445](https://github.com/opsplane-services/am2am/commit/0cd6445ea17a963d3c2f2e5b6feb309c0496e8cc))
+
 ## [0.1.9](https://github.com/opsplane-services/am2am/compare/v0.1.8...v0.1.9) (2024-12-23)
 
 
