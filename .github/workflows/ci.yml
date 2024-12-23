@@ -95,7 +95,7 @@ jobs:
         uses: actions-rs/toolchain@v1
         with:
           toolchain: stable
-          components: rustfmt, clippy
+          components: rustfmt, clippy, cargo-audit
           override: true
 
       - name: Check formatting
@@ -106,9 +106,6 @@ jobs:
       
       - name: Run tests
         run: cargo test
-
-      - name: Install cargo-audit
-        run: cargo install cargo-audit
 
       - name: Audit dependencies
         run: cargo audit
