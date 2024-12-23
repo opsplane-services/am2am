@@ -1,6 +1,6 @@
 [package]
 name = "am2am"
-version = "0.1.9"
+version = "0.1.10"
 edition = "2021"
 homepage = "https://github.com/opsplane-services/am2am"
 repository = "https://github.com/opsplane-services/am2am"
