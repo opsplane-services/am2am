@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.1.9](https://github.com/opsplane-services/am2am/compare/v0.1.8...v0.1.9) (2024-12-23)
+
+
+### Bug Fixes
+
+* add description ([24bea06](https://github.com/opsplane-services/am2am/commit/24bea06ee6a93f3d284860acceba9abf38fc8b8f))
+
 ## [0.1.8](https://github.com/opsplane-services/am2am/compare/v0.1.7...v0.1.8) (2024-12-23)
 
 
