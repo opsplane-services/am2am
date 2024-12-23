@@ -238,23 +238,23 @@ jobs:
           driver: docker-container
           driver-opts: image=moby/buildkit:latest
       
-      #- name: Build and push
-      #  uses: docker/build-push-action@v3
-      #  if: ${{ !needs.release-please.outputs.created }}
-      #  with:
-      #    context: .
-      #    file: ./Dockerfile
-      #    platforms: linux/amd64,linux/arm64
-      #    tags: ${{ steps.meta.outputs.tags }}
-      #    labels: ${{ steps.meta.outputs.labels }}
-      #    push: ${{ github.event_name != 'pull_request' }}
+      - name: Build and push
+        uses: docker/build-push-action@v3
+        if: ${{ !needs.release-please.outputs.created }}
+        with:
+          context: .
+          file: ./Dockerfile
+          platforms: linux/amd64,linux/arm64
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+          push: ${{ github.event_name != 'pull_request' }}
 
-      #- name: Build and push release
-      #  uses: docker/build-push-action@v3
-      #  if: ${{ needs.release-please.outputs.created }}
-      #  with:
-      #    context: .
-      #    file: ./Dockerfile
-      #    tags: ${{ steps.meta_release.outputs.tags }}
-      #    labels: ${{ steps.meta_release.outputs.labels }}
-      #    push: ${{ github.event_name != 'pull_request' }}
+      - name: Build and push release
+        uses: docker/build-push-action@v3
+        if: ${{ needs.release-please.outputs.created }}
+        with:
+          context: .
+          file: ./Dockerfile
+          tags: ${{ steps.meta_release.outputs.tags }}
+          labels: ${{ steps.meta_release.outputs.labels }}
+          push: ${{ github.event_name != 'pull_request' }}
