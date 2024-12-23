@@ -108,12 +108,24 @@ jobs:
         run: cargo test
 
       - name: Install cargo-audit
+        if: matrix.platform.os-type != 'windows'
         run: |
           if ! command -v cargo audit &>/dev/null; then
             cargo install cargo-audit
           else
             echo "Cargo audit is already installed, skipping installation."
           fi
+
+      - name: Install cargo-audit (Windows)
+        if: matrix.platform.os-type == 'windows'
+        shell: powershell
+        run: |
+          if (-not (Get-Command cross -ErrorAction SilentlyContinue)) {
+            Write-Host "Cross not found. Installing..."
+            cargo install cross --locked
+          } else {
+            Write-Host "Cross is already installed."
+          }
 
       - name: Audit dependencies
         run: cargo audit
