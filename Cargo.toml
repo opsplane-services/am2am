@@ -6,6 +6,7 @@ homepage = "https://github.com/opsplane-services/am2am"
 repository = "https://github.com/opsplane-services/am2am"
 readme = "README.md"
 license = "MIT"
+description = "A proxy that is designed to handle incoming webhooks from Alertmanager and forward them to another Alertmanager instance"
 
 [dependencies]
 axum = "0.7"
