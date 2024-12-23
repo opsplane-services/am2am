@@ -1,5 +1,21 @@
 # Changelog
 
+## [0.1.8](https://github.com/opsplane-services/am2am/compare/v0.1.7...v0.1.8) (2024-12-23)
+
+
+### Bug Fixes
+
+* add sha256 for releases ([1d70ad2](https://github.com/opsplane-services/am2am/commit/1d70ad2d9aa747531abd93801d5b9528538e66f2))
+* enable all OS ([ae49feb](https://github.com/opsplane-services/am2am/commit/ae49feb951b0ffb53978e6a99021d633a38c182d))
+* enable docker builds ([890653f](https://github.com/opsplane-services/am2am/commit/890653f10b839b8e4b011c406f8b72c236b3eb44))
+* handle sha256 for macOs ([eb5b678](https://github.com/opsplane-services/am2am/commit/eb5b678cca07ab34a892f2f9c4e734ade24c8f8d))
+* install cargo-audit as additional component ([8f99109](https://github.com/opsplane-services/am2am/commit/8f991090c80649c71f1e09cc192728fd283b679d))
+* other way of cargo audit install ([211caa5](https://github.com/opsplane-services/am2am/commit/211caa5bfb795bef7edf061c45a47e68145f0606))
+* test aarch64 for linux ([2dea067](https://github.com/opsplane-services/am2am/commit/2dea0679209f1307059554a1766ccce1d88eb899))
+* test again with arm64 ([8806124](https://github.com/opsplane-services/am2am/commit/8806124a85cbe387c6be1a04ab457cee186bc3cb))
+* test arm64 with apt update ([597787d](https://github.com/opsplane-services/am2am/commit/597787d79a2981647869c5ae7e326ccc9fa225bf))
+* test without release ([84de5b6](https://github.com/opsplane-services/am2am/commit/84de5b62ef64e38c80be4cdc5a1d31908e28f041))
+
 ## [0.1.7](https://github.com/opsplane-services/am2am/compare/v0.1.6...v0.1.7) (2024-12-22)
 
 
