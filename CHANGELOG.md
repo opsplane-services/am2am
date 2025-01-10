@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.1.11](https://github.com/opsplane-services/am2am/compare/v0.1.10...v0.1.11) (2025-01-10)
+
+
+### Bug Fixes
+
+* Update ci.yml ([1b47e06](https://github.com/opsplane-services/am2am/commit/1b47e067ce97e07a9838dc9fd0d9e56418dc8c52))
+
 ## [0.1.10](https://github.com/opsplane-services/am2am/compare/v0.1.9...v0.1.10) (2024-12-23)
 
 
