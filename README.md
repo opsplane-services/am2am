@@ -3,7 +3,7 @@
 ![build workflow](https://github.com/opsplane-services/am2am/actions/workflows/ci.yml/badge.svg)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
-`am2am` is a proxy application designed to handle incoming webhooks from Alertmanager and forward them to another Alertmanager instance. It supports routing to multiple Alertmanager instances based on labels, as well as optional Basic Authentication.
+`am2am` is a proxy adapter application designed to handle incoming webhooks from Alertmanager and forward them to another Alertmanager instance. It supports routing to multiple Alertmanager instances based on labels, as well as optional Basic Authentication.
 
 ## Features
 
