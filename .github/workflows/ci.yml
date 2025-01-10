@@ -110,11 +110,7 @@ jobs:
       - name: Install cargo-audit
         if: matrix.platform.os-type != 'windows'
         run: |
-          if ! command -v cargo audit &>/dev/null; then
-            cargo install cargo-audit
-          else
-            echo "Cargo audit is already installed, skipping installation."
-          fi
+          cargo install cargo-audit
 
       - name: Install cargo-audit (Windows)
         if: matrix.platform.os-type == 'windows'
